@@ -40,8 +40,11 @@ class PlotWidget(QtWidgets.QWidget):
         self.canvas = FigureCanvas(self.fig) # Get the plot image
         self.axes = self.fig.add_subplot(111,projection='3d') # Create matpotlib axes
 
-        layout = QtWidgets.QVBoxLayout(self) 
-        layout.addWidget(self.canvas)
+        self.setWindowTitle('Linear transformations')
+
+        self.layout = QtWidgets.QGridLayout(self) # Set the layout
+
+        self.addToLayout(self.canvas, [0,0],[10,10]) # add the plot to the layout
 
     def scatter(self,xyzgrid:list,colors:list):
         """Scatter the data
@@ -60,3 +63,8 @@ class PlotWidget(QtWidgets.QWidget):
         """
         self.axes.clear()
         self.axes.scatter(xyzgrid[0],xyzgrid[1],xyzgrid[2],c = colors,alpha=0.7)
+
+    def addToLayout(self, widget, position:list = [0,0], size:list = [1,1]):
+        """Add widget to layout
+        """
+        self.layout.addWidget(widget,position[1],position[0],size[1],size[0])

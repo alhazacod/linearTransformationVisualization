@@ -12,6 +12,8 @@ import PyQt5.QtWidgets as QtWidgets     #Python GUI
 
 from Plotting import PlotWidget         #The plot object
 
+from MatrixButtons import MatrixButtons
+
 def transformPoint(x,y,z):
     """Return the vector transformed
     
@@ -85,12 +87,17 @@ if __name__ == "__main__":
 
     colors = list(map(colorizer, originalGrid[0], originalGrid[1], originalGrid[2])) # Asign the colors to the points
 
-    app = QtWidgets.QApplication([])
-    plot = PlotWidget()
+    app = QtWidgets.QApplication([]) # Create the app
+    plot = PlotWidget() # Get the widget where the plot is
 
-    plot.scatter(xyzgrid,colors)
+    plot.scatter(xyzgrid,colors) # Scatter
 
-    adjust_plot(plot.axes)
+    adjust_plot(plot.axes) # Set the limits of the axes
 
-    plot.show()
+    interface = MatrixButtons() # Get the interface
+    plot.addToLayout(interface,[11,4],[10,2]) # add the interface to the plot layout
+
+    interface.setMatrix(transformationMatrix)
+
+    plot.show() 
     app.exec()
