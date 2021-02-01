@@ -4,12 +4,10 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
 """
 TODO:
-    - I should add the option of default colors and alpha but i couldn't, it's something to fix
+    -
 """
 class PlotWidget(QtWidgets.QWidget):
-    """
-
-    Widget for PyQt5 with the plot
+    """Widget for PyQt5 with the plot
 
     ...
 
@@ -36,13 +34,29 @@ class PlotWidget(QtWidgets.QWidget):
 
     canvas: matplotlib.backends.backend_qt5agg.FigureCanvasQTAgg
     """
-    def __init__(self, x: list, y: list, z: list, colors: tuple, alpha: float):
+    def __init__(self):
         super().__init__()
-        self.fig = Figure()
-        self.canvas = FigureCanvas(self.fig)
-        self.axes = self.fig.add_subplot(111,projection='3d')
+        self.fig = Figure() # Create a matplotlib figure
+        self.canvas = FigureCanvas(self.fig) # Get the plot image
+        self.axes = self.fig.add_subplot(111,projection='3d') # Create matpotlib axes
 
-        layout = QtWidgets.QVBoxLayout(self)
+        layout = QtWidgets.QVBoxLayout(self) 
         layout.addWidget(self.canvas)
 
-        self.axes.scatter(x, y, z, c = colors, alpha = alpha)
+    def scatter(self,xyzgrid:list,colors:list):
+        """Scatter the data
+    
+        ...
+
+        Parameters
+        ----------
+        xyzgrid:list
+            data for plotting
+            xyzgrid[0] the x data
+            xyzgrid[1] the y data
+            xyzgrid[2] the z
+        colors:list
+            colors
+        """
+        self.axes.clear()
+        self.axes.scatter(xyzgrid[0],xyzgrid[1],xyzgrid[2],c = colors,alpha=0.7)
