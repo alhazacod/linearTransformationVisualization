@@ -40,8 +40,8 @@ class MatrixButtons(QtWidgets.QWidget):
         self.addToLayout(self.matrix22,[2,2],[1,1])
 
         # Button for plot the grid transformed by the matrix
-        plotButton = QtWidgets.QPushButton('Plot')
-        self.addToLayout(plotButton,[1,3],[1,1])
+        self.plotButton = QtWidgets.QPushButton('Plot')
+        self.addToLayout(self.plotButton,[1,3],[1,1])
 
         
     def addToLayout(self, widget, position:list, size:list):
