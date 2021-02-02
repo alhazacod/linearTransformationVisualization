@@ -15,7 +15,7 @@ class MatrixButtons(QtWidgets.QWidget):
         super().__init__()
         self.layout = QtWidgets.QGridLayout(self) # Set the layout
 
-        # First row
+        #First row
         self.matrix00 = QtWidgets.QLineEdit()
         self.matrix10 = QtWidgets.QLineEdit()
         self.matrix20 = QtWidgets.QLineEdit()
