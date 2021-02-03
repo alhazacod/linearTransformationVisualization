@@ -103,9 +103,9 @@ def transformAndPlot(plot,matrix):
 def examplesComboBox(window,comboBox):
     examples = {
         'Original Grid' :[[1, 0, 0],[0, 1, 0],[0, 0, 1]],
-        'X rotation 45º' :[[1, 0, 0],[0, 'cos(45*pi/180)', -sin(45*pi/180)],[0, sin(45*pi/180), cos(45*pi/180)]],
-        'Y rotation 45º' :[[cos(45*pi/180), -sin(45*pi/180), 0],[sin(45*pi/180), cos(45*pi/180), 0],[0, 0, 1]],
-        'Z rotation 45º' :[[cos(45*pi/180), 0, -sin(45*pi/180)],[0, 1, 0],[sin(45*pi/180), 0, cos(45*pi/180)]]
+        'X rotation 45º' :[[1, 0, 0],[0, 'cos(45*pi/180)', '-sin(45*pi/180)'],[0, 'sin(45*pi/180)', 'cos(45*pi/180)']],
+        'Y rotation 45º' :[['cos(45*pi/180)', '-sin(45*pi/180)', 0],['sin(45*pi/180)', 'cos(45*pi/180)', 0],[0, 0, 1]],
+        'Z rotation 45º' :[['cos(45*pi/180)', 0, '-sin(45*pi/180)'],[0, 1, 0],['sin(45*pi/180)', 0, 'cos(45*pi/180)']]
     }
     for key in examples:
         examplesWidget.addItem(key)
