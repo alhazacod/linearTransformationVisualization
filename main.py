@@ -83,14 +83,14 @@ def exceptionDialog(msg):
     dlg.exec_()
 
 
-def transformAndPlot(interface, plot):
+def transformAndPlot(plot,matrix):
     try:
-        transformationMatrix = Matrix([[N(interface.matrix00.text()), N(interface.matrix10.text()), N(interface.matrix20.text())],
-                                       [N(interface.matrix01.text()), N(interface.matrix11.text()), N(interface.matrix21.text())],
-                                       [N(interface.matrix02.text()), N(interface.matrix12.text()), N(interface.matrix22.text())]])
-
-        
-        xyzgrid = get_transformedGrid(originalGrid, transformationMatrix) # get a transformed grid
+        matrix = array(matrix)
+        print(matrix)
+        interface.setMatrix(matrix)
+        xyzgrid = get_transformedGrid(originalGrid, Matrix([[N(matrix[0,0]),N(matrix[0,1]),N(matrix[0,2])],
+                                                            [N(matrix[1,0]),N(matrix[1,1]),N(matrix[1,2])],
+                                                            [N(matrix[2,0]),N(matrix[2,1]),N(matrix[2,2])]])) # get a transformed grid
 
         plot.scatter(xyzgrid,colors)
         adjust_plot(plot.axes)
@@ -100,14 +100,28 @@ def transformAndPlot(interface, plot):
         print(err)
         exceptionDialog('An error has ocurred. Remember that you only can write operations between numbers or trigonometric functions in the matrix boxes. ex. sin(3*pi/2) or 30+0.5')
 
+def examplesComboBox(window,comboBox):
+    examples = {
+        'Original Grid' :[[1, 0, 0],[0, 1, 0],[0, 0, 1]],
+        'X rotation 45º' :[[1, 0, 0],[0, 'cos(45*pi/180)', -sin(45*pi/180)],[0, sin(45*pi/180), cos(45*pi/180)]],
+        'Y rotation 45º' :[[cos(45*pi/180), -sin(45*pi/180), 0],[sin(45*pi/180), cos(45*pi/180), 0],[0, 0, 1]],
+        'Z rotation 45º' :[[cos(45*pi/180), 0, -sin(45*pi/180)],[0, 1, 0],[sin(45*pi/180), 0, cos(45*pi/180)]]
+    }
+    for key in examples:
+        examplesWidget.addItem(key)
+
+    examplesWidget.activated[str].connect(lambda str: transformAndPlot(window,examples.get(str)))
+
+    window.addToLayout(examplesWidget, [11,1],[3,1])
+
 if __name__ == "__main__":
     """Transformation matrix"""
-    transformationMatrix = Matrix([[1, 0, 0],
-                                   [0, 1, 0],
-                                   [0, 0, 1]])
+    transformationMatrix = [[1, 0, 0],
+                            [0, 1, 0],
+                            [0, 0, 1]]
 
     originalGrid = get_grid(-2,2) # Create a straigh grid
-    xyzgrid = get_transformedGrid(originalGrid, transformationMatrix) # get a transformed grid
+    xyzgrid = get_transformedGrid(originalGrid, Matrix(transformationMatrix)) # get a transformed grid
 
     colors = list(map(colorizer, originalGrid[0], originalGrid[1], originalGrid[2])) # Asign the colors to the points
 
@@ -117,15 +131,20 @@ if __name__ == "__main__":
     plot.scatter(xyzgrid,colors) # Scatter
 
     adjust_plot(plot.axes) # Set the limits of the axes
-
-    plot.addToLayout(QtWidgets.QLabel('Titulo'),[11,0],[1,1])
+    
+    plot.addToLayout(QtWidgets.QLabel('Examples'),[11,0],[1,1])
+    examplesWidget = QtWidgets.QComboBox()
+    examplesComboBox(plot,examplesWidget)
 
     interface = MatrixButtons() # Get the interface
     plot.addToLayout(interface,[11,4],[10,2]) # add the interface to the plot layout
 
-    interface.setMatrix(transformationMatrix)
+    interface.setMatrix(array(transformationMatrix))
 
-    interface.plotButton.clicked.connect(lambda: transformAndPlot(interface,plot))
+    interface.plotButton.clicked.connect(
+        lambda: transformAndPlot(plot,[[interface.matrix00.text(), interface.matrix10.text(), interface.matrix20.text()],
+                                       [interface.matrix01.text(), interface.matrix11.text(), interface.matrix21.text()],
+                                       [interface.matrix02.text(), interface.matrix12.text(), interface.matrix22.text()]]))
 
     plot.show() 
     app.exec()

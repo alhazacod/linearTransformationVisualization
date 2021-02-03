@@ -1,6 +1,7 @@
 import PyQt5.QtWidgets as QtWidgets
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from sympy import Matrix
 
 class MatrixButtons(QtWidgets.QWidget):
     """Widget for PyQt5 with the Matrix input and the buttons
