@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt         #Plotting
 from numpy import linspace,column_stack,array #For create the linspace for the plotting
 
 import PyQt5.QtWidgets as QtWidgets     #Python GUI
+from PyQt5.QtGui import QFont           #Pyqt5 fonts
 
 from Plotting import PlotWidget         #The plot object
 
@@ -25,10 +26,9 @@ def colorizer(x, y,z):
     
     """
     r = min(1, 1-y/3)
-    g = min(1, 1+y/3)
+    g = min(1, 1+x/3)
     b = 1/4 + x/16
     return (r, g, b)
-
 
 def get_grid(min,max):
     """Return a grid in x, y and z
@@ -75,15 +75,14 @@ def adjust_plot(axes):
     axes.set_ylabel('y')   # Axes names
     axes.set_zlabel('z')   #
     axes.grid(True)       # Don't show the grid
-    axes.view_init(10,5)   # View init at 15 and 5 degrees
 
 def exceptionDialog(msg):
     dlg = QtWidgets.QErrorMessage()
     dlg.showMessage(msg)
     dlg.exec_()
 
-
 def transformAndPlot(plot,matrix):
+    
     try:
         matrix = array(matrix)
         print(matrix)
@@ -91,28 +90,40 @@ def transformAndPlot(plot,matrix):
         xyzgrid = get_transformedGrid(originalGrid, Matrix([[N(matrix[0,0]),N(matrix[0,1]),N(matrix[0,2])],
                                                             [N(matrix[1,0]),N(matrix[1,1]),N(matrix[1,2])],
                                                             [N(matrix[2,0]),N(matrix[2,1]),N(matrix[2,2])]])) # get a transformed grid
-
         plot.scatter(xyzgrid,colors)
         adjust_plot(plot.axes)
         plot.fig.canvas.draw()
         plot.fig.canvas.flush_events()
-    except ValueError as err:
-        print(err)
-        exceptionDialog('An error has ocurred. Remember that you only can write operations between numbers or trigonometric functions in the matrix boxes. ex. sin(3*pi/2) or 30+0.5')
+    except:
+        exceptionDialog('An error has ocurred. Remember that you only can write operations between numbers or trigonometric functions in the matrix boxes. ex. sin(3*pi/2) or sqrt(2)/2+5')
 
 def examplesComboBox(window,comboBox):
     examples = {
         'Original Grid' :[[1, 0, 0],[0, 1, 0],[0, 0, 1]],
+        'Personalized matrix' :[[1, 0, 0],[0, 1, 0],[0, 0, 1]],
+        'Reflect in X' :[[-1, 0, 0],[0, 1, 0],[0, 0, 1]],
+        'Reflect in Y' :[[1, 0, 0],[0, -1, 0],[0, 0, 1]],
+        'Reflect in Z' :[[1, 0, 0],[0, 1, 0],[0, 0, -1]],
+        'Stretch in Y' :[[1, 0, 0],[0, 2, 0],[0, 0, 1]],
+        'Compact in Y' :[[1, 0, 0],[0, '1/2', 0],[0, 0, 1]],
         'X rotation 45º' :[[1, 0, 0],[0, 'cos(45*pi/180)', '-sin(45*pi/180)'],[0, 'sin(45*pi/180)', 'cos(45*pi/180)']],
         'Y rotation 45º' :[['cos(45*pi/180)', '-sin(45*pi/180)', 0],['sin(45*pi/180)', 'cos(45*pi/180)', 0],[0, 0, 1]],
-        'Z rotation 45º' :[['cos(45*pi/180)', 0, '-sin(45*pi/180)'],[0, 1, 0],['sin(45*pi/180)', 0, 'cos(45*pi/180)']]
+        'Z rotation 45º' :[['cos(45*pi/180)', 0, '-sin(45*pi/180)'],[0, 1, 0],['sin(45*pi/180)', 0, 'cos(45*pi/180)']],
+        'X-Y rotation 45º-10º':[['cos(45*pi/180)*cos(10*pi/180)','cos(45*pi/180)*sin(10*pi/180)-sin(45*pi/180)','cos(45*pi/180)*sin(10*pi/180)+sin(45*pi/180)*sin(10*pi/180)'],['sin(45*pi/180)*cos(10*pi/180)','sin(45*pi/180)*sin(10*pi/180)+cos(45*pi/180)','sin(45*pi/180)*sin(10*pi/180)-cos(45*pi/180)'],['-sin(10*pi/180)','cos(10*pi/180)','cos(10*pi/180)']],
+        'Only XY dimension' :[[1, 0, 0],[0, 1, 0],[0, 0, 0]],
+        'Only YZ dimension' :[[0, 0, 0],[0, 1, 0],[0, 0, 1]],
+        'Only XZ dimension' :[[1, 0, 0],[0, 0, 0],[0, 0, 1]]
     }
     for key in examples:
         examplesWidget.addItem(key)
 
     examplesWidget.activated[str].connect(lambda str: transformAndPlot(window,examples.get(str)))
 
-    window.addToLayout(examplesWidget, [11,1],[3,1])
+    window.addToLayout(examplesWidget, [13,2],[3,1])
+
+def plotButton(plot,matrix):
+    transformAndPlot(plot,matrix)
+    examplesWidget.setCurrentIndex(1)
 
 if __name__ == "__main__":
     """Transformation matrix"""
@@ -131,20 +142,26 @@ if __name__ == "__main__":
     plot.scatter(xyzgrid,colors) # Scatter
 
     adjust_plot(plot.axes) # Set the limits of the axes
+    plot.axes.view_init(10,5)   # View init at 15 and 5 degrees
     
-    plot.addToLayout(QtWidgets.QLabel('Examples'),[11,0],[1,1])
+    examples_label = QtWidgets.QLabel('Examples')
+    examples_label.setFont(QFont('Sans Serif', 20))
+    plot.addToLayout(examples_label,[12,2],[1,1])
     examplesWidget = QtWidgets.QComboBox()
     examplesComboBox(plot,examplesWidget)
 
+    matrix_label = QtWidgets.QLabel('Transformation Matrix')
+    matrix_label.setFont(QFont('Sans Serif', 20))
+    plot.addToLayout(matrix_label,[12,4],[2,1])
     interface = MatrixButtons() # Get the interface
-    plot.addToLayout(interface,[11,4],[10,2]) # add the interface to the plot layout
+    plot.addToLayout(interface,[11,5],[10,2]) # add the interface to the plot layout
 
     interface.setMatrix(array(transformationMatrix))
 
     interface.plotButton.clicked.connect(
-        lambda: transformAndPlot(plot,[[interface.matrix00.text(), interface.matrix10.text(), interface.matrix20.text()],
-                                       [interface.matrix01.text(), interface.matrix11.text(), interface.matrix21.text()],
-                                       [interface.matrix02.text(), interface.matrix12.text(), interface.matrix22.text()]]))
+        lambda: plotButton(plot,[[interface.matrix00.text(), interface.matrix10.text(), interface.matrix20.text()],
+                                 [interface.matrix01.text(), interface.matrix11.text(), interface.matrix21.text()],
+                                 [interface.matrix02.text(), interface.matrix12.text(), interface.matrix22.text()]]))
 
     plot.show() 
     app.exec()
