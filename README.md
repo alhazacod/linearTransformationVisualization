@@ -5,10 +5,10 @@
 A linear transformation is a function from one vector space to another that respects the linear structure of each vector space ([Learn more](https://brilliant.org/wiki/linear-transformations/)). For visualizing this we can transform a vector as we can see in the Fig. 1. 
 
 <figure>
-  <img src="vector_linearTransformation.png" alt="vector transformed" style="width:40%;
-                                                                             display: block;
-                                                                             margin-left: auto;
-                                                                             margin-right: auto;">
+  <img src="https://i.ibb.co/VTRy5Tx/vector-linear-Transformation.png" alt="vector transformed" style="width:40%;
+                                                                                                       display: block;
+                                                                                                       margin-left: auto;
+                                                                                                       margin-right: auto;">
   <figcaption  style="text-align: center;">Fig.1 - Vector transformed with a transformation matrix</figcaption>
 </figure>
 
