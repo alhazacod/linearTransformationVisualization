@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt         #Plotting
 from numpy import linspace,column_stack,array #For create the linspace for the plotting
 
 import PyQt5.QtWidgets as QtWidgets     #Python GUI
-from PyQt5.QtGui import QFont           #Pyqt5 fonts
+from PyQt5.QtGui import QFont,QIcon     #Pyqt5 fonts
 
 from Plotting import PlotWidget         #The plot object
 
@@ -164,4 +164,5 @@ if __name__ == "__main__":
                                  [interface.matrix02.text(), interface.matrix12.text(), interface.matrix22.text()]]))
 
     plot.show() 
+    app.setWindowIcon(QIcon('icon.png'))
     app.exec()
