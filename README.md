@@ -19,7 +19,7 @@ But it has an obvious problem, because the linear transformation transform the w
 ### With the executable file
 
 1. Install Python from the [python web](https://www.python.org/).
-2. Download the executable file for your OS (Linux or Windows).
+2. Download the executable file for your OS ([Linux](https://sourceforge.net/projects/lineartransformationvisualized/files/V1.0.0/3d_linear_transformation_Linux/download) or [Windows](https://sourceforge.net/projects/lineartransformationvisualized/files/V1.0.0/3d_linear_transformation_Windows.exe/download)).
 3. Execute the file (it might take a while to open).
 4. Start using.
 
